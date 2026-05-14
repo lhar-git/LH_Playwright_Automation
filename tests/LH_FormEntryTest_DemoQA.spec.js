@@ -29,16 +29,16 @@ test('LH_FormEntryTest_DemoQA', async ({ page }) => {
     });
 
     // First Name
-    await page.locator('#firstName').fill('John');
+    await page.locator('#firstName').fill('Mary');
 
     // Last Name
-    await page.locator('#lastName').fill('Brown');
+    await page.locator('#lastName').fill('Smith');
 
     // Email
-    await page.locator('#userEmail').fill('John@email.com');
+    await page.locator('#userEmail').fill('mary@email.com');
 
     // Gender
-    await page.locator('label[for="gender-radio-1"]').click();
+    await page.locator('label[for="gender-radio-2"]').click();
 
     // Mobile
     await page.locator('#userNumber').fill('9998887777');
