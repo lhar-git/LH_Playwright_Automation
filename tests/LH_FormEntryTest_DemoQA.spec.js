@@ -29,7 +29,7 @@ test('LH_FormEntryTest_DemoQA', async ({ page }) => {
     });
 
     // First Name
-    await page.locator('#firstName').fill('Mary');
+    await page.locator('#firstName').fill('Susan');
 
     // Last Name
     await page.locator('#lastName').fill('Smith');
