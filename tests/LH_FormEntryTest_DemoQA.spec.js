@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const path = require('path');
 
 test('LH_FormEntryTest_DemoQA', async ({ page }) => {
 
@@ -73,6 +74,16 @@ test('LH_FormEntryTest_DemoQA', async ({ page }) => {
     await page.locator('#hobbies-checkbox-1').check(); // Sports
     await page.locator('#hobbies-checkbox-3').check(); // Music
 
+    // Upload Picture
+
+    const filePath = path.join(
+        __dirname,
+        '../test-data/images/sample-image.png'
+    );
+
+    await page.locator('#uploadPicture')
+        .setInputFiles(filePath);
+
     // Address
     await page.locator('#currentAddress')
         .fill('20 Test Street');
@@ -95,6 +106,10 @@ test('LH_FormEntryTest_DemoQA', async ({ page }) => {
     await expect(
         page.locator('#example-modal-sizes-title-lg')
     ).toHaveText('Thanks for submitting the form');
+
+    await expect(
+        page.locator('tr', { hasText: 'Picture' })
+    ).toContainText('sample-image.png');
 
     // Pause for demo visibility
     await page.waitForTimeout(5000);
