@@ -1,117 +1,53 @@
-const { test, expect } = require('@playwright/test');
-const path = require('path');
+const { test } = require('@playwright/test');
 
-test('LH_FormEntryTest_DemoQA', async ({ page }) => {
+const {
+    PracticeFormPage
+} = require('../pages/PracticeFormPage');
 
-    // Increase timeout
-    test.setTimeout(60000);
+const {
+    readCSV
+} = require('../utils/csvReader');
 
-    // Open application
-    await page.goto('https://demoqa.com/automation-practice-form');
+test.describe(
+    'LH_FormEntryTest_DemoQA',
+    () => {
 
-    // Maximize viewport
-    await page.setViewportSize({
-        width: 1600,
-        height: 1200
+    test.setTimeout(120000);
+
+    let testData;
+
+    test.beforeAll(async () => {
+
+        testData = await readCSV(
+            'test-data/csv/formData.csv'
+        );
     });
 
-    // Remove ads and fixed elements
-    await page.evaluate(() => {
+    test(
+        'Submit all users from CSV',
+        async ({ page }) => {
 
-        const fixedBan = document.querySelector('#fixedban');
-        if (fixedBan) fixedBan.remove();
+        const formPage =
+            new PracticeFormPage(page);
 
-        const footer = document.querySelector('footer');
-        if (footer) footer.remove();
+        for (const data of testData) {
 
-        const ads = document.querySelectorAll('iframe');
-        ads.forEach(ad => ad.remove());
+            console.log(
+                `Running test for: ${data.firstName} ${data.lastName}`
+            );
 
+            await formPage.navigate();
+
+            await formPage.fillForm(data);
+
+            await formPage.submitForm();
+
+            await formPage.validateSubmission(
+                data.picture
+            );
+
+            // Close modal before next record
+            await page.keyboard.press('Escape');
+        }
     });
-
-    // First Name
-    await page.locator('#firstName').fill('Susan');
-
-    // Last Name
-    await page.locator('#lastName').fill('Smith');
-
-    // Email
-    await page.locator('#userEmail').fill('mary@email.com');
-
-    // Gender
-    await page.locator('label[for="gender-radio-2"]').click();
-
-    // Mobile
-    await page.locator('#userNumber').fill('9998887777');
-
-    // Date of Birth
-    await page.locator('#dateOfBirthInput').click();
-
-    await page.locator('.react-datepicker__year-select')
-        .selectOption('1990');
-
-    await page.locator('.react-datepicker__month-select')
-        .selectOption('5');
-
-    await page.locator(
-        '.react-datepicker__day--014:not(.react-datepicker__day--outside-month)'
-    ).click();
-
-  // Subjects
-  const subjects = ['Maths', 'English', 'Computer Science'];
-
-  for (const subject of subjects) {
-
-      await page.locator('#subjectsInput').fill(subject);
-
-      // Click dropdown option instead of Enter key
-      await page.locator('.subjects-auto-complete__menu-list')
-          .locator(`text=${subject}`)
-          .click();
-  }
-
-    // Hobbies
-    await page.locator('#hobbies-checkbox-1').check(); // Sports
-    await page.locator('#hobbies-checkbox-3').check(); // Music
-
-    // Upload Picture
-
-    const filePath = path.join(
-        __dirname,
-        '../test-data/images/sample-image.png'
-    );
-
-    await page.locator('#uploadPicture')
-        .setInputFiles(filePath);
-
-    // Address
-    await page.locator('#currentAddress')
-        .fill('20 Test Street');
-
-    // State
-    await page.locator('#state').click();
-    await page.locator('#react-select-3-option-0').click();
-
-    // City
-    await page.locator('#city').click();
-    await page.locator('#react-select-4-option-0').click();
-
-    // Pause 10 seconds before submit
-    await page.waitForTimeout(10000);
-
-    // Submit
-    await page.locator('#submit').click();
-
-    // Validate successful submission
-    await expect(
-        page.locator('#example-modal-sizes-title-lg')
-    ).toHaveText('Thanks for submitting the form');
-
-    await expect(
-        page.locator('tr', { hasText: 'Picture' })
-    ).toContainText('sample-image.png');
-
-    // Pause for demo visibility
-    await page.waitForTimeout(5000);
-
 });

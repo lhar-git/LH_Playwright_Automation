@@ -1,0 +1,6 @@
+firstName,lastName,email,gender,mobile,dobMonth,dobYear,dobDay,subjects,hobbies,address,state,city,picture
+John,Brown,john@email.com,Male,9998887777,5,1990,14,"Maths|English|Computer Science","Sports|Music","20 Test Street",NCR,Delhi,sample-image.png
+Susan,Smith,susan@email.com,Female,8887776666,3,1992,20,"Maths|English","Sports","25 King Street",NCR,Delhi,sample-image.png
+Mike,Jones,mike@email.com,Male,7776665555,8,1988,10,"Computer Science","Music","30 Queen Street",NCR,Delhi,sample-image.png
+Ben,Johnson,ben@email.com,Male,9995551212,7,1995,13,"English","Music","65 Rainy Blvd",NCR,Delhi,sample-image.png
+Timothy,Walker,timmy@email.com,Male,9995553333,9,1989,17,"Maths","Reading","45 Stafford Ave",Haryana,Karnal,sample-image.png
